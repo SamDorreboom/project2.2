@@ -4,15 +4,15 @@
 #include <Arduino_JSON.h>
 
 // MESH Details
-#define   MESH_PREFIX     "ITDirect" //name for your MESH
-#define   MESH_PASSWORD   "ITDirect" //password for your MESH
-#define   MESH_PORT       5555 //default port
+#define   MESH_PREFIX     "ITDirect" 
+#define   MESH_PASSWORD   "ITDirect" 
+#define   MESH_PORT       5555 
 
 //BME object on the default I2C pins
 Adafruit_BME280 bme;
 
 //Number for this node
-int nodeNumber = 3;
+int nodeNumber = 2;
 
 //String to send to other nodes with sensor readings
 String readings;
@@ -89,7 +89,7 @@ void setup() {
   initBME();
 
   //mesh.setDebugMsgTypes( ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE ); // all types on
-  mesh.setDebugMsgTypes( ERROR | STARTUP );  // set before init() so that you can see startup messages
+  mesh.setDebugMsgTypes( ERROR | STARTUP );  
 
   mesh.init( MESH_PREFIX, MESH_PASSWORD, &userScheduler, MESH_PORT );
   mesh.onReceive(&receivedCallback);
@@ -102,6 +102,5 @@ void setup() {
 }
 
 void loop() {
-  // it will run the user scheduler as well
   mesh.update();
 }

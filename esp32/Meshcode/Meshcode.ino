@@ -11,9 +11,7 @@
 //BME object on the default I2C pins
 Adafruit_BME280 bme;
 
-float floatMap(float x, float in_min, float in_max, float out_min, float out_max) {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
+
 //Number for this node
 int nodeNumber = 1;
 
@@ -36,11 +34,6 @@ String getReadings () {
   jsonReadings["temp"] = bme.readTemperature();
   jsonReadings["hum"] = bme.readHumidity();
   jsonReadings["pres"] = bme.readPressure()/100.0F;
-    // Add the potentiometer value
-  int analogValue = analogRead(4);
-  float voltage = floatMap(analogValue, 0, 4095, 0, 3.3);
-  jsonReadings["analog"] = analogValue;
-  jsonReadings["volt"] = analogValue;
   readings = JSON.stringify(jsonReadings);
   return readings;
 }
@@ -66,8 +59,7 @@ void receivedCallback( uint32_t from, String &msg ) {
   double temp = myObject["temp"];
   double hum = myObject["hum"];
   double pres = myObject["pres"];
-  double analog = myObject["analog"];
-  double volt = myObject["volt"];
+
   Serial.print("Node: ");
   Serial.println(node);
   Serial.print("Temperature: ");
@@ -79,10 +71,7 @@ void receivedCallback( uint32_t from, String &msg ) {
   Serial.print("Pressure: ");
   Serial.print(pres);
   Serial.println(" hpa");
-  Serial.print("Potentiometer analog: ");
-  Serial.println(analog);
-  Serial.print("Potentiometer voltage: ");
-  Serial.println(volt);
+
 }
 
 

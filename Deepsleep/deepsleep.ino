@@ -1,5 +1,5 @@
 #define uS_TO_S_FACTOR 1000000
-#define TIME_TO_SLEEP 15
+#define TIME_TO_SLEEP 40
 RTC_DATA_ATTR int bootCount = 0;
 
 float floatMap(float x, float in_min, float in_max, float out_min, float out_max) {
@@ -15,7 +15,7 @@ Serial.begin(115200);
 ++bootCount;
 
 }
-
+// this prints the wakeup reason so that we know why the esp32 is going out of its deepsleep.
 void print_wakeup_reason(){
   esp_sleep_wakeup_cause_t wakeup_reason;
 
@@ -46,7 +46,9 @@ Serial.print(", Stiffness: ");
 Serial.print(stiffnessPercent);
 Serial.println("%");
 
-
+// This code checks if the percentage has changed more than 4% and if it is above 20%. 
+// If the stiffness change is less than 4% and under 20% it will go into deepsleep for 40 seconds.
+// if the stiffness change is more than 4% or above 20% it will stay awake and producing new data.
 if (abs(stiffnessPercent - previousStiffnessPercent) > 4 || stiffnessPercent > 20) {
 previousStiffnessPercent = stiffnessPercent;
 Serial.println("Stiffness change greater than 4% or if stiffness greater than 20%, staying awake");
@@ -54,7 +56,7 @@ delay(1000);
 } 
 
 else {
-  Serial.println("Going to deep sleep for 15 sec");
+  Serial.println("Going to deep sleep for 40 sec");
   previousStiffnessPercent = stiffnessPercent;
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   Serial.flush(); 

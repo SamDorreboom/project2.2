@@ -1,3 +1,18 @@
+/*
+The Wi-Fi task is responsible for establishing and maintaining an internet connection.
+It checks the connection status every 10 seconds. If the connection is lost, it tries to reconnect for 20 seconds.
+If the reconnection attempt fails, it waits for 30 seconds before trying again. 
+
+The collect data task is responsible for gathering sensor readings from the BME280 and stretch sensors.
+It collects the data every second and stores it in a JSON object. The JSON object is then converted to a string and added to a queue.
+If the queue is full, the oldest data will be removed to make room for new data.
+The queue is used to ensure that the data is not lost in case the Wi-Fi connection fails and the data cannot be sent to Node-RED. 
+
+The send task is responsible for transmitting the sensor data to Node-RED. It uses the UDP protocol for fast and efficient data transmission.
+The task runs every half second and retrieves data from the queue. It runs so frequently to allow for quick recovery in case the Wi-Fi connection fails.
+The use of UDP allows for fast data transfer, which is important since the sensor data needs to be sent every second. 
+*/
+
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <cJSON.h>
